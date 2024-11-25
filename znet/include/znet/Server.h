@@ -1,11 +1,11 @@
 #pragma once
-#include "arpa/inet.h"
-#include "sys/socket.h"
-#include "unistd.h"
-#include "ziface/IServer.h"
+#include <boost/asio.hpp>
 #include <iostream>
-#include <string>
-#include <future>
+
+#include "ziface/IServer.h"
+
+using namespace boost::asio;
+using namespace boost::system;
 
 #define BUFFER_SIZE 1024
 

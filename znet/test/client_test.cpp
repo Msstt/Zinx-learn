@@ -1,47 +1,55 @@
 #include "znet/Server.h"
 #include <cstring>
 
-auto GetClientSocket(std::string ip, uint16_t port) -> int {
-  int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-  sockaddr_in address;
-  address.sin_family = AF_INET;
-  address.sin_addr.s_addr = inet_addr(ip.c_str());
-  address.sin_port = htons(port);
-  if (connect(socket_fd, reinterpret_cast<sockaddr *>(&address),
-              sizeof(address)) == -1) {
-    std::cerr << "connect server fail" << std::endl;
-    return -1;
+auto InitSocket(ip::tcp::socket &client, std::string ip, uint16_t port)
+    -> bool {
+  error_code err;
+  auto endpoint = ip::tcp::endpoint(ip::address::from_string(ip, err), port);
+  if (err) {
+    std::cerr << "client get ip fail: " << err << std::endl;
+    return false;
   }
-  return socket_fd;
+  client.connect(endpoint, err);
+  if (err) {
+    std::cerr << "client connect fail: " << err << std::endl;
+    return false;
+  }
+  return true;
 }
 
 int main() {
   auto server = NewServer("[zinx V0.1]");
+
   auto future = std::async(std::launch::async, [&]() {
     std::this_thread::sleep_for(std::chrono::seconds(3));
-    int client_fd = GetClientSocket("127.0.0.1", 7777);
-    if (client_fd == -1) {
+    io_service service;
+    ip::tcp::socket client(service);
+    if (!InitSocket(client, "127.0.0.1", 7777)) {
       return;
     }
-    char buffer[BUFFER_SIZE];
+    char buf[BUFFER_SIZE];
+    error_code err;
     while (true) {
-      strcpy(buffer, "hello ZINX");
-      if (write(client_fd, buffer, 10) <= 0) {
-        std::cerr << "send data failed" << std::endl;
+      client.write_some(buffer("hello ZINX"), err);
+      if (err) {
+        std::cerr << "client send data failed: " << err << std::endl;
         break;
       }
-      int data_cnt;
-      if ((data_cnt = read(client_fd, buffer, BUFFER_SIZE)) <= 0) {
-        std::cerr << "recv data failed" << std::endl;
+      int bytes = client.read_some(buffer(buf, BUFFER_SIZE), err);
+      if (err) {
+        std::cerr << "client recv data failed: " << err << std::endl;
         break;
       }
-      buffer[data_cnt] = '\0';
-      std::cout << " server call back : " << buffer << ", cnt = " << data_cnt
+      std::cout << " server call back : " << buf << ", cnt = " << bytes - 1
                 << std::endl;
       std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    close(client_fd);
+    client.close(err);
+    if (err) {
+      std::cerr << "client close failed: " << err << std::endl;
+    }
   });
+
   server->Serve();
   while (true) {
   }

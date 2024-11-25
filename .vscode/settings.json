@@ -56,6 +56,14 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "bit": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "*.ipp": "cpp",
+        "csignal": "cpp",
+        "bitset": "cpp",
+        "codecvt": "cpp",
+        "complex": "cpp",
+        "list": "cpp",
+        "iomanip": "cpp",
+        "typeindex": "cpp"
     }
 }

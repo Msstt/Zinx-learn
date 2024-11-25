@@ -1,69 +1,66 @@
 #include "znet/Server.h"
 
-auto GetListenSocket(std::string ip, uint16_t port) -> int {
-  int fd = socket(AF_INET, SOCK_STREAM, 0);
-  if (fd == -1) {
-    std::cerr << "get listen socket call socket failed" << std::endl;
-    return -1;
+auto InitAccpetor(ip::tcp::acceptor &acceptor, std::string ip, uint16_t port)
+    -> bool {
+  error_code err;
+  auto endpoint = ip::tcp::endpoint(ip::address::from_string(ip, err), port);
+  if (err) {
+    std::cerr << "server get ip fail: " << err << std::endl;
+    return false;
   }
-  sockaddr_in address;
-  int address_len = sizeof(address);
-  address.sin_family = AF_INET;
-  address.sin_addr.s_addr = inet_addr(ip.c_str());
-  address.sin_port = htons(port);
-  if (bind(fd, reinterpret_cast<sockaddr *>(&address), address_len) == -1) {
-    std::cerr << "get listen socket call bind failed" << std::endl;
-    return -1;
+  acceptor.open(endpoint.protocol(), err);
+  if (err) {
+    std::cerr << "server open acceptor fail: " << err << std::endl;
+    return false;
   }
-  if (listen(fd, 5) == -1) {
-    std::cerr << "get listen socket call listen failed" << std::endl;
-    return -1;
+  acceptor.set_option(ip::tcp::acceptor::reuse_address(true));
+  acceptor.bind(endpoint, err);
+  if (err) {
+    std::cerr << "server bind acceptor fail: " << err << std::endl;
+    return false;
   }
-  return fd;
+  acceptor.listen();
+  return true;
 }
 
-auto GetClientSocket(int server_fd) -> int {
-  sockaddr_in address;
-  int address_len = sizeof(address);
-  int fd = accept(server_fd, reinterpret_cast<sockaddr *>(&address),
-                  reinterpret_cast<socklen_t *>(&address_len));
-  if (fd == -1) {
-    std::cerr << "get client socket call accept failed" << std::endl;
-    return -1;
-  }
-  std::cout << "Server connect " << inet_ntoa(address.sin_addr) << " ..."
-            << std::endl;
-  return fd;
-}
-
-auto HandleClient(int client_fd) {
-  char buffer[BUFFER_SIZE];
+void HandleClient(ip::tcp::socket &client) {
+  char buf[BUFFER_SIZE];
   while (true) {
-    int data_size = read(client_fd, buffer, BUFFER_SIZE);
-    if (data_size <= 0) {
-      break;
+    error_code err;
+    int bytes = client.read_some(buffer(buf, BUFFER_SIZE), err);
+    if (err) {
+      std::cerr << "server recv client data failed: " << err << std::endl;
+      return;
     }
-    write(client_fd, buffer, data_size);
+    client.write_some(buffer(buf, bytes), err);
+    if (err) {
+      std::cerr << "server send client data failed: " << err << std::endl;
+      return;
+    }
   }
-  close(client_fd);
 }
 
 void Server::Start() {
   std::cout << "[START] Server listenner at IP: " << this->ip_ << ", Port "
             << this->port_ << ", is starting" << std::endl;
   auto future = std::async(std::launch::async, [&] {
-    int server_fd = GetListenSocket(this->ip_, this->port_);
-    if (server_fd == -1) {
+    io_service service;
+    auto acceptor = ip::tcp::acceptor(service);
+    if (!InitAccpetor(acceptor, this->ip_, this->port_)) {
       return;
     }
     std::cout << "start Zinx server " << this->name_
               << " success, now listenning..." << std::endl;
     while (true) {
-      int client_fd = GetClientSocket(server_fd);
-      if (client_fd == -1) {
+      ip::tcp::socket client(service);
+      error_code err;
+      acceptor.accept(client, err);
+      if (err) {
+        std::cerr << "server get client socket failed: " << err << std::endl;
         continue;
       }
-      auto future = std::async(std::launch::async, HandleClient, client_fd);
+      auto future =
+          std::async(std::launch::async, HandleClient, std::ref(client));
     }
   });
 }
