@@ -1,13 +1,12 @@
 #pragma once
 #include <boost/asio.hpp>
-#include <iostream>
 
+#include "tools/prelude.h"
 #include "ziface/IServer.h"
+#include "znet/Connection.h"
 
 using namespace boost::asio;
 using namespace boost::system;
-
-#define BUFFER_SIZE 1024
 
 class Server : public IServer {
 public:

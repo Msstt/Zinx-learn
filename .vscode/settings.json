@@ -64,6 +64,15 @@
         "complex": "cpp",
         "list": "cpp",
         "iomanip": "cpp",
-        "typeindex": "cpp"
-    }
+        "typeindex": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "coroutine": "cpp",
+        "source_location": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "span": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "enabled"
 }

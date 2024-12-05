@@ -1,17 +1,18 @@
 #include "znet/Server.h"
 #include <cstring>
+#include <thread>
 
 auto InitSocket(ip::tcp::socket &client, std::string ip, uint16_t port)
     -> bool {
   error_code err;
   auto endpoint = ip::tcp::endpoint(ip::address::from_string(ip, err), port);
   if (err) {
-    std::cerr << "client get ip fail: " << err << std::endl;
+    LOG(ERROR) << "client get ip fail: " << err;
     return false;
   }
   client.connect(endpoint, err);
   if (err) {
-    std::cerr << "client connect fail: " << err << std::endl;
+    LOG(ERROR) << "client connect fail: " << err;
     return false;
   }
   return true;
@@ -20,7 +21,7 @@ auto InitSocket(ip::tcp::socket &client, std::string ip, uint16_t port)
 int main() {
   auto server = NewServer("[zinx V0.1]");
 
-  auto future = std::async(std::launch::async, [&]() {
+  CREATE_THREAD {
     std::this_thread::sleep_for(std::chrono::seconds(3));
     io_service service;
     ip::tcp::socket client(service);
@@ -32,23 +33,23 @@ int main() {
     while (true) {
       client.write_some(buffer("hello ZINX"), err);
       if (err) {
-        std::cerr << "client send data failed: " << err << std::endl;
+        LOG(ERROR) << "client send data failed: " << err;
         break;
       }
       int bytes = client.read_some(buffer(buf, BUFFER_SIZE), err);
       if (err) {
-        std::cerr << "client recv data failed: " << err << std::endl;
+        LOG(ERROR) << "client recv data failed: " << err;
         break;
       }
-      std::cout << " server call back : " << buf << ", cnt = " << bytes - 1
-                << std::endl;
+      LOG(INFO) << " server call back : " << buf << ", cnt = " << bytes - 1;
       std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     client.close(err);
     if (err) {
-      std::cerr << "client close failed: " << err << std::endl;
+      LOG(ERROR) << "client close failed: " << err;
     }
-  });
+  }
+  CREATE_THREAD_
 
   server->Serve();
   while (true) {
