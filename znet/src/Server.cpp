@@ -34,6 +34,9 @@ auto HandleClient(ip::tcp::socket &socket, char *buf, int bytes) -> bool {
 }
 
 void Server::Start() {
+  if (this->router_.empty()) {
+    return;
+  }
   LOG(INFO) << "[START] Server listenner at IP: " << this->ip_ << ", Port "
             << this->port_ << ", is starting";
   CREATE_THREAD {
@@ -54,7 +57,7 @@ void Server::Start() {
         continue;
       }
       auto connecion =
-          new Connection(std::move(client), connection_id++, HandleClient);
+          new Connection(std::move(client), connection_id++, *this->router_[0]);
       connecion->Start();
     }
   }
@@ -69,6 +72,10 @@ void Server::Serve() {
   this->Start();
   while (true) {
   }
+}
+
+void Server::AddRouter(std::shared_ptr<IRouter> router) {
+  this->router_.push_back(router);
 }
 
 auto NewServer(std::string name) -> std::unique_ptr<IServer> {

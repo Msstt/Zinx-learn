@@ -1,4 +1,5 @@
 #include "znet/Server.h"
+#include "znet/Router.h"
 #include <cstring>
 #include <thread>
 
@@ -20,6 +21,7 @@ auto InitSocket(ip::tcp::socket &client, std::string ip, uint16_t port)
 
 int main() {
   auto server = NewServer("[zinx V0.1]");
+  server->AddRouter(std::make_shared<Router>());
 
   CREATE_THREAD {
     std::this_thread::sleep_for(std::chrono::seconds(3));

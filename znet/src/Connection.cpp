@@ -1,4 +1,5 @@
 #include "znet/Connection.h"
+#include "znet/Request.h"
 
 Connection::~Connection() { this->socket_.close(); }
 
@@ -13,10 +14,17 @@ void Connection::Start() {
         LOG(ERROR) << "Connection read client data failed: " << err;
         break;
       }
-      if (!this->handle_api_(this->socket_, this->buffer_, bytes)) {
-        LOG(ERROR) << "Connection handle client data failed: " << err;
-        break;
+      std::vector<uint8_t> data(bytes);
+      for (size_t i = 0; i < bytes; i++) {
+        data[i] = static_cast<uint8_t>(this->buffer_[i]);
       }
+      auto request = std::make_shared<Request>(*this, std::move(data));
+      CREATE_THREAD__(request) {
+        this->router_.PreHandle(*request);
+        this->router_.Handle(*request);
+        this->router_.PostHandle(*request);
+      }
+      CREATE_THREAD_
     }
     DLOG(INFO) << "Connection end";
     this->~Connection();
@@ -29,8 +37,14 @@ void Connection::Stop() {
   this->socket_.cancel();
 }
 
-auto Connection::GetConnectionId() -> uint32_t { return this->connection_id_; }
+auto Connection::GetConnectionId() const -> uint32_t {
+  return this->connection_id_;
+}
 
-auto Connection::RemoteAddress() -> ip::tcp::endpoint {
+auto Connection::GetTCPConnection() -> ip::tcp::socket & {
+  return this->socket_;
+}
+
+auto Connection::RemoteAddress() const -> ip::tcp::endpoint {
   return this->socket_.remote_endpoint();
 }

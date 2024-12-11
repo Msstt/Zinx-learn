@@ -16,12 +16,14 @@ public:
   void Start() override;
   void Stop() override;
   void Serve() override;
+  void AddRouter(std::shared_ptr<IRouter> router) override;
 
 private:
   std::string name_;
   std::string ip_version_;
   std::string ip_;
   uint16_t port_;
+  std::vector<std::shared_ptr<IRouter>> router_;
 };
 
 auto NewServer(std::string) -> std::unique_ptr<IServer>;
