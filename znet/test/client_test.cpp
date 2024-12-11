@@ -20,7 +20,7 @@ auto InitSocket(ip::tcp::socket &client, std::string ip, uint16_t port)
 }
 
 int main() {
-  auto server = NewServer("[zinx V0.1]");
+  auto server = NewServer();
   server->AddRouter(std::make_shared<Router>());
 
   CREATE_THREAD {

@@ -72,7 +72,10 @@
         "numbers": "cpp",
         "semaphore": "cpp",
         "stop_token": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "forward_list": "cpp",
+        "ranges": "cpp",
+        "valarray": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

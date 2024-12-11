@@ -1,0 +1,6 @@
+{
+    "Name": "ZINX",
+    "Host": "127.0.0.1",
+    "Post": 7777,
+    "MaxConnectionNumber": 5
+}

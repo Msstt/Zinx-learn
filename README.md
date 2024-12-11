@@ -4,6 +4,7 @@
 - gtest
 - glog
 - boost-asio
+- nlohmann-json
 
 V0.1
 - 回显服务器

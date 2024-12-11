@@ -78,8 +78,9 @@ void Server::AddRouter(std::shared_ptr<IRouter> router) {
   this->router_.push_back(router);
 }
 
-auto NewServer(std::string name) -> std::unique_ptr<IServer> {
+auto NewServer() -> std::unique_ptr<IServer> {
+  const auto &conf = GlobalObject::Instance();
   std::unique_ptr<IServer> server =
-      std::make_unique<Server>(name, "tcp4", "0.0.0.0", 7777);
+      std::make_unique<Server>(conf.name_, "tcp4", conf.host_, conf.port_);
   return server;
 }

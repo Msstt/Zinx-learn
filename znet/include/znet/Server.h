@@ -1,7 +1,8 @@
 #pragma once
 #include <boost/asio.hpp>
 
-#include "tools/prelude.h"
+#include "utils/prelude.h"
+#include "utils/GlobalObject.h"
 #include "ziface/IServer.h"
 #include "znet/Connection.h"
 
@@ -26,4 +27,4 @@ private:
   std::vector<std::shared_ptr<IRouter>> router_;
 };
 
-auto NewServer(std::string) -> std::unique_ptr<IServer>;
+auto NewServer() -> std::unique_ptr<IServer>;
