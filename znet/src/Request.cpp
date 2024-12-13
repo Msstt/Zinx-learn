@@ -2,4 +2,4 @@
 
 auto Request::GetConnection() -> IConnection & { return this->connection_; }
 
-auto Request::GetData() -> std::vector<uint8_t> & { return this->data_; }
+auto Request::GetMsg() const -> const IMessage & { return this->msg_; }

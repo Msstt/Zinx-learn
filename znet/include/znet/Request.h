@@ -1,16 +1,17 @@
 #pragma once
 #include "ziface/IRequest.h"
 #include "znet/Connection.h"
+#include "znet/Message.h"
 
 class Request : public IRequest {
 public:
-  Request(IConnection &connection, std::vector<uint8_t> data)
-      : connection_(connection), data_(std::move(data)) {}
+  Request(IConnection &connection, Message msg)
+      : connection_(connection), msg_(std::move(msg)) {}
 
   auto GetConnection() -> IConnection & override;
-  auto GetData() -> std::vector<uint8_t> & override;
+  auto GetMsg()const -> const IMessage & override;
 
 private:
   IConnection &connection_;
-  std::vector<uint8_t> data_;
+  Message msg_;
 };

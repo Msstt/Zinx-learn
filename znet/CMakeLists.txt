@@ -1,6 +1,7 @@
 aux_source_directory(test TEST)
 aux_source_directory(src SRC)
 list(REMOVE_ITEM TEST test/client_test.cpp)
+list(REMOVE_ITEM TEST test/pack_test.cpp)
 set(INCLUDE)
 list(APPEND INCLUDE ${CMAKE_SOURCE_DIR}/utils/include)
 list(APPEND INCLUDE ${CMAKE_SOURCE_DIR}/ziface/include)
@@ -14,6 +15,10 @@ add_custom_target(znet_test_done COMMAND ./znet_test DEPENDS znet_test)
 add_executable(server_test test/client_test.cpp ${SRC})
 target_include_directories(server_test PUBLIC ${INCLUDE})
 target_link_libraries(server_test utils)
+
+add_executable(pack_test test/pack_test.cpp ${SRC})
+target_include_directories(pack_test PUBLIC ${INCLUDE})
+target_link_libraries(pack_test utils)
 
 add_library(znet SHARED ${SRC})
 target_include_directories(znet PUBLIC ${INCLUDE})

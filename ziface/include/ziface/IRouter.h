@@ -5,6 +5,7 @@
 class IRouter {
 public:
   virtual ~IRouter() = default;
+
   virtual void PreHandle(IRequest &) {
     LOG(WARNING) << "Router PreHandle not implement";
   };

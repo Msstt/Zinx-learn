@@ -1,13 +1,8 @@
 #pragma once
-#include <boost/asio.hpp>
-
 #include "utils/prelude.h"
 #include "utils/GlobalObject.h"
 #include "ziface/IServer.h"
 #include "znet/Connection.h"
-
-using namespace boost::asio;
-using namespace boost::system;
 
 class Server : public IServer {
 public:

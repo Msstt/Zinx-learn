@@ -1,24 +1,17 @@
 #include "znet/Connection.h"
 #include "znet/Request.h"
 
-Connection::~Connection() { this->socket_.close(); }
+Connection::~Connection() { this->Stop(); }
 
 void Connection::Start() {
   CREATE_THREAD {
     DLOG(INFO) << "Connection start";
     error_code err;
-    while (!this->is_closed_) {
-      size_t bytes =
-          this->socket_.read_some(buffer(this->buffer_, BUFFER_SIZE), err);
-      if (err) {
-        LOG(ERROR) << "Connection read client data failed: " << err;
-        break;
-      }
-      std::vector<uint8_t> data(bytes);
-      for (size_t i = 0; i < bytes; i++) {
-        data[i] = static_cast<uint8_t>(this->buffer_[i]);
-      }
-      auto request = std::make_shared<Request>(*this, std::move(data));
+    while (true) {
+      Message msg;
+      this->RecvMsg(this->socket_, msg);
+
+      auto request = std::make_shared<Request>(*this, std::move(msg));
       CREATE_THREAD__(request) {
         this->router_.PreHandle(*request);
         this->router_.Handle(*request);
@@ -32,10 +25,7 @@ void Connection::Start() {
   CREATE_THREAD_
 }
 
-void Connection::Stop() {
-  this->is_closed_ = false;
-  this->socket_.cancel();
-}
+void Connection::Stop() { this->socket_.close(); }
 
 auto Connection::GetConnectionId() const -> uint32_t {
   return this->connection_id_;
@@ -47,4 +37,31 @@ auto Connection::GetTCPConnection() -> ip::tcp::socket & {
 
 auto Connection::RemoteAddress() const -> ip::tcp::endpoint {
   return this->socket_.remote_endpoint();
+}
+
+auto Connection::SendMsg(const IMessage &msg) -> bool {
+  return Connection::SendMsg(this->socket_, msg);
+}
+
+auto Connection::SendMsg(ip::tcp::socket &socket, const IMessage &msg) -> bool {
+  DataPack pack;
+  std::vector<uint8_t> buf;
+  pack.Pack(msg, buf);
+  if (!SocketExactWrite(buf, socket)) {
+    return false;
+  }
+  return true;
+}
+
+auto Connection::RecvMsg(ip::tcp::socket &socket, IMessage &msg) -> bool {
+  DataPack pack;
+  std::vector<uint8_t> buf(pack.GetHeadLen());
+  if (!SocketExactRead(socket, buf)) {
+    return false;
+  }
+  pack.UnPack(buf, msg);
+  if (!SocketExactRead(socket, msg.GetData())) {
+    return false;
+  }
+  return true;
 }

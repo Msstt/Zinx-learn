@@ -14,3 +14,9 @@ V0.2
 
 V0.3
 - 添加 Request，Router，基础路由模块
+
+V0.4
+- 添加 GlobalObject，支持读入配置文件
+
+V0.5
+- 添加 Message，DataPack，封装消息，实现封包解包，解决 TCP 粘包问题

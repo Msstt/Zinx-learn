@@ -2,6 +2,7 @@
 #include "utils/prelude.h"
 #include "ziface/IConnection.h"
 #include "ziface/IRouter.h"
+#include "znet/DataPack.h"
 
 #define BUFFER_SIZE 1024
 
@@ -16,11 +17,14 @@ public:
   auto GetConnectionId() const -> uint32_t override;
   auto GetTCPConnection() -> ip::tcp::socket & override;
   auto RemoteAddress() const -> ip::tcp::endpoint override;
+  auto SendMsg(const IMessage &) -> bool override;
+
+  static auto SendMsg(ip::tcp::socket &, const IMessage &) -> bool;
+  static auto RecvMsg(ip::tcp::socket &, IMessage &) -> bool;
 
 private:
   ip::tcp::socket socket_;
   uint32_t connection_id_;
-  std::atomic<bool> is_closed_{false};
   IRouter &router_;
-  char buffer_[BUFFER_SIZE];
+  uint8_t buffer_[BUFFER_SIZE];
 };
