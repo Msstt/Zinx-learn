@@ -2,7 +2,7 @@
 #include "utils/prelude.h"
 #include "ziface/IRouter.h"
 
-class Router : public IRouter {
+class UpperRouter : public IRouter {
 public:
   void PreHandle(IRequest &request) override;
   void Handle(IRequest &request) override;

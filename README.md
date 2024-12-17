@@ -20,3 +20,6 @@ V0.4
 
 V0.5
 - 添加 Message，DataPack，封装消息，实现封包解包，解决 TCP 粘包问题
+
+V0.6
+- 添加 MsgHandle，实现多路由模式

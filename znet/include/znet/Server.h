@@ -3,6 +3,7 @@
 #include "utils/GlobalObject.h"
 #include "ziface/IServer.h"
 #include "znet/Connection.h"
+#include "znet/MsgHandle.h"
 
 class Server : public IServer {
 public:
@@ -12,14 +13,14 @@ public:
   void Start() override;
   void Stop() override;
   void Serve() override;
-  void AddRouter(std::shared_ptr<IRouter> router) override;
+  void AddRouter(uint32_t, std::shared_ptr<IRouter> router) override;
 
 private:
   std::string name_;
   std::string ip_version_;
   std::string ip_;
   uint16_t port_;
-  std::vector<std::shared_ptr<IRouter>> router_;
+  MsgHandle msg_handle_;
 };
 
 auto NewServer() -> std::unique_ptr<IServer>;

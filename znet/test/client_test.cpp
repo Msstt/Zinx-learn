@@ -5,7 +5,8 @@
 #include <thread>
 
 #include "znet/Message.h"
-#include "znet/Router.h"
+#include "znet/EchoRouter.h"
+#include "znet/UpperRouter.h"
 #include "znet/Server.h"
 
 auto InitSocket(ip::tcp::socket &client, std::string ip, uint16_t port)
@@ -33,7 +34,8 @@ int main() {
   }
 
   auto server = NewServer();
-  server->AddRouter(std::make_shared<Router>());
+  server->AddRouter(0, std::make_shared<EchoRouter>());
+  server->AddRouter(1, std::make_shared<UpperRouter>());
 
   CREATE_THREAD {
     std::this_thread::sleep_for(std::chrono::seconds(3));
@@ -45,7 +47,7 @@ int main() {
     error_code err;
     uint32_t msg_id = 0;
     while (true) {
-      msg.SetId(msg_id++);
+      msg.SetId(msg_id ^= 1);
       if (!Connection::SendMsg(client, msg)) {
         LOG(ERROR) << "client send data failed: " << err;
         break;

@@ -1,16 +1,17 @@
 #pragma once
 #include "utils/prelude.h"
 #include "ziface/IConnection.h"
-#include "ziface/IRouter.h"
+#include "ziface/IMsgHandle.h"
 #include "znet/DataPack.h"
 
 #define BUFFER_SIZE 1024
 
 class Connection : public IConnection {
 public:
-  Connection(ip::tcp::socket socket, uint32_t connection_id, IRouter &router)
+  Connection(ip::tcp::socket socket, uint32_t connection_id,
+             IMsgHandle &msg_handle)
       : socket_(std::move(socket)), connection_id_(connection_id),
-        router_(router) {}
+        msg_handle_(msg_handle) {}
   ~Connection();
   void Start() override;
   void Stop() override;
@@ -25,6 +26,6 @@ public:
 private:
   ip::tcp::socket socket_;
   uint32_t connection_id_;
-  IRouter &router_;
+  IMsgHandle &msg_handle_;
   uint8_t buffer_[BUFFER_SIZE];
 };

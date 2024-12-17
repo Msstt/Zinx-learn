@@ -13,9 +13,7 @@ void Connection::Start() {
 
       auto request = std::make_shared<Request>(*this, std::move(msg));
       CREATE_THREAD__(request) {
-        this->router_.PreHandle(*request);
-        this->router_.Handle(*request);
-        this->router_.PostHandle(*request);
+        this->msg_handle_.DoMsgHandler(*request);
       }
       CREATE_THREAD_
     }
