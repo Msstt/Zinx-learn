@@ -19,7 +19,7 @@ void Server() {
   DataPack pack;
   while (true) {
     Message msg;
-    if (!Connection::RecvMsg(client, msg)) {
+    if (Connection::RecvMsg(client, msg) != ErrorKind::OK_) {
       LOG(ERROR) << "RecvMsg failed";
       return;
     }
@@ -54,7 +54,7 @@ void Client() {
       pack.Pack(msg, tmp_buf);
       buf.insert(buf.end(), tmp_buf.begin(), tmp_buf.end());
     }
-    if (!SocketExactWrite(buf, client)) {
+    if (SocketExactWrite(buf, client) != ErrorKind::OK_) {
       return;
     }
 

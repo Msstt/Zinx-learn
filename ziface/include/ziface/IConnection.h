@@ -11,5 +11,5 @@ public:
   virtual auto GetConnectionId() const -> uint32_t = 0;
   virtual auto GetTCPConnection() -> ip::tcp::socket & = 0;
   virtual auto RemoteAddress() const -> ip::tcp::endpoint = 0;
-  virtual auto SendMsg(const IMessage &) -> bool = 0;
+  virtual auto SendMsg(const IMessage &) -> ErrorKind = 0;
 };

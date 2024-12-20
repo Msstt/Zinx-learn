@@ -77,5 +77,7 @@
         "ranges": "cpp",
         "valarray": "cpp"
     },
-    "C_Cpp.errorSquiggles": "enabled"
+    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.clang_format_style": "file", // 使用 .clang-format 文件
+    "C_Cpp.clang_format_fallbackStyle": "Google" // 如果未找到 .clang-format，则使用 Google 风格
 }

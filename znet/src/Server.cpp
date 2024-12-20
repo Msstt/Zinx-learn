@@ -53,8 +53,8 @@ void Server::Start() {
         LOG(ERROR) << "Server get client socket failed: " << err;
         continue;
       }
-      auto connecion =
-          new Connection(std::move(client), connection_id++, this->msg_handle_);
+      auto connecion = std::make_shared<Connection>(
+          std::move(client), connection_id++, this->msg_handle_);
       connecion->Start();
     }
   }
