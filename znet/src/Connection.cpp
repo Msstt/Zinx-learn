@@ -10,8 +10,10 @@ void Connection::Start() {
 }
 
 void Connection::StartReader() {
+  auto use_pool = GlobalObject::Instance().worker_pool_size_ != 0;
+
   auto self = this->shared_from_this();
-  ThreadPool::Instance().AddThread(std::thread([self] {
+  ThreadPool::Instance().AddThread(std::thread([self, use_pool] {
     DLOG(INFO) << "Connection reader start";
     error_code err;
     while (!self->is_close_) {
@@ -26,8 +28,12 @@ void Connection::StartReader() {
       }
 
       auto request = std::make_shared<Request>(*self, std::move(msg));
-      CREATE_THREAD__(request) { self->msg_handle_.DoMsgHandler(*request); }
-      CREATE_THREAD_
+      if (use_pool) {
+        self->msg_handle_.SendMsgToTaskQueue(request);
+      } else {
+        CREATE_THREAD__(request) { self->msg_handle_.DoMsgHandler(*request); }
+        CREATE_THREAD_
+      }
     }
     DLOG(INFO) << "Connection reader end";
   }));
@@ -38,7 +44,7 @@ void Connection::StartWriter() {
   ThreadPool::Instance().AddThread(std::thread([self] {
     DLOG(INFO) << "Connection writer start";
     while (!self->is_close_) {
-      auto data = self->buffer_.pop();
+      auto data = self->buffer_.PopAll();
       if (data.empty()) {
         continue;
       }
@@ -59,7 +65,7 @@ void Connection::StartWriter() {
 
 void Connection::Stop() {
   this->is_close_ = true;
-  this->buffer_.finish();
+  this->buffer_.Finish();
   error_code err;
   this->socket_.close(err);
   if (err) {
@@ -83,7 +89,7 @@ auto Connection::SendMsg(const IMessage &msg) -> ErrorKind {
   DataPack pack;
   std::vector<uint8_t> buf;
   pack.Pack(msg, buf);
-  this->buffer_.push(buf);
+  this->buffer_.Push(buf);
   return ErrorKind::OK_;
 }
 

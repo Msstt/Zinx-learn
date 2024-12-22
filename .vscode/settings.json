@@ -75,7 +75,18 @@
         "span": "cpp",
         "forward_list": "cpp",
         "ranges": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "csetjmp": "cpp",
+        "barrier": "cpp",
+        "cfenv": "cpp",
+        "charconv": "cpp",
+        "cuchar": "cpp",
+        "unordered_set": "cpp",
+        "regex": "cpp",
+        "latch": "cpp",
+        "scoped_allocator": "cpp",
+        "shared_mutex": "cpp",
+        "syncstream": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.clang_format_style": "file", // 使用 .clang-format 文件

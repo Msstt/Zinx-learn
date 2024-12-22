@@ -1,9 +1,9 @@
 #pragma once
-#include "utils/prelude.h"
+#include "utils/Prelude.h"
 #include "ziface/IMessage.h"
 
 class IDataPack {
-public:
+ public:
   virtual ~IDataPack() = default;
 
   virtual auto GetHeadLen() -> uint32_t = 0;

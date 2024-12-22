@@ -3,7 +3,9 @@
 #include <boost/asio.hpp>
 #include <iostream>
 
-#include "utils/thread_pool.h"
+#include "utils/ThreadPool.h"
+#include "utils/GlobalObject.h"
+#include "utils/SyncQueue.h"
 
 using namespace boost::asio;
 using namespace boost::system;

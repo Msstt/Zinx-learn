@@ -1,9 +1,9 @@
 #pragma once
-#include "utils/prelude.h"
+#include "utils/Prelude.h"
 #include "ziface/IMessage.h"
 
 class IConnection {
-public:
+ public:
   virtual ~IConnection() = default;
 
   virtual void Start() = 0;

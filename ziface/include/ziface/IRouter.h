@@ -1,9 +1,9 @@
 #pragma once
-#include "utils/prelude.h"
+#include "utils/Prelude.h"
 #include "ziface/IRequest.h"
 
 class IRouter {
-public:
+ public:
   virtual ~IRouter() = default;
 
   virtual void PreHandle(IRequest &) {

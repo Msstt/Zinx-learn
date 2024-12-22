@@ -16,6 +16,9 @@ void GlobalObject::LoadConfig() {
     this->host_ = config["Host"];
     this->port_ = config["Post"];
     this->max_connection_number_ = config["MaxConnectionNumber"];
+    this->worker_pool_size_ = config["WorkerPoolSize"];
+    this->max_worker_task_length_ = config["MaxWorkerTaskLength"];
+    this->max_data_buffer_size_= config["MaxDataBufferSize"];
   } catch (...) {
     LOG(FATAL) << "GlobalObject parse \"./conf/zinx.json\" failed";
   }

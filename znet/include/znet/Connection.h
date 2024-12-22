@@ -1,6 +1,5 @@
 #pragma once
-#include "utils/prelude.h"
-#include "utils/sync_queue.h"
+#include "utils/Prelude.h"
 #include "ziface/IConnection.h"
 #include "ziface/IMsgHandle.h"
 #include "znet/DataPack.h"
@@ -9,11 +8,13 @@
 
 class Connection : public IConnection,
                    public std::enable_shared_from_this<Connection> {
-public:
+ public:
   Connection(ip::tcp::socket socket, uint32_t connection_id,
              IMsgHandle &msg_handle)
-      : socket_(std::move(socket)), connection_id_(connection_id),
-        msg_handle_(msg_handle) {}
+      : socket_(std::move(socket)),
+        connection_id_(connection_id),
+        msg_handle_(msg_handle),
+        buffer_(GlobalObject::Instance().max_data_buffer_size_) {}
   ~Connection();
   void Start() override;
   void Stop() override;
@@ -26,7 +27,7 @@ public:
   static auto SendMsg(ip::tcp::socket &, const IMessage &) -> ErrorKind;
   static auto RecvMsg(ip::tcp::socket &, IMessage &) -> ErrorKind;
 
-private:
+ private:
   void StartReader();
   void StartWriter();
 
@@ -35,5 +36,5 @@ private:
   ip::tcp::socket socket_;
   uint32_t connection_id_;
   IMsgHandle &msg_handle_;
-  SyncQueue buffer_{BUFFER_SIZE};
+  SyncQueue<uint8_t> buffer_;
 };

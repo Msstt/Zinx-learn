@@ -1,8 +1,8 @@
 #pragma once
-#include "utils/prelude.h"
+#include "utils/Prelude.h"
 
 class IMessage {
-public:
+ public:
   virtual ~IMessage() = default;
 
   virtual auto GetId() const -> uint32_t = 0;

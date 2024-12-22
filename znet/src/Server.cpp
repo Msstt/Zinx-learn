@@ -36,6 +36,7 @@ auto HandleClient(ip::tcp::socket &socket, char *buf, int bytes) -> bool {
 void Server::Start() {
   LOG(INFO) << "[START] Server listenner at IP: " << this->ip_ << ", Port "
             << this->port_ << ", is starting";
+  this->msg_handle_.StartWorkerPool();
   CREATE_THREAD {
     io_service service;
     auto acceptor = ip::tcp::acceptor(service);

@@ -1,12 +1,11 @@
 #pragma once
-#include "utils/prelude.h"
-#include "utils/GlobalObject.h"
+#include "utils/Prelude.h"
 #include "ziface/IServer.h"
 #include "znet/Connection.h"
 #include "znet/MsgHandle.h"
 
 class Server : public IServer {
-public:
+ public:
   Server(std::string name, std::string ip_version, std::string ip,
          uint16_t port)
       : name_(name), ip_version_(ip_version), ip_(ip), port_(port) {}
@@ -15,7 +14,7 @@ public:
   void Serve() override;
   void AddRouter(uint32_t, std::shared_ptr<IRouter> router) override;
 
-private:
+ private:
   std::string name_;
   std::string ip_version_;
   std::string ip_;
