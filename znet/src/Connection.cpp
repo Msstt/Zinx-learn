@@ -5,6 +5,8 @@
 Connection::~Connection() { this->Stop(); }
 
 void Connection::Start() {
+  this->server_.CallOnConnectionStart(*this);
+
   this->StartReader();
   this->StartWriter();
 }
@@ -14,7 +16,7 @@ void Connection::StartReader() {
 
   auto self = this->shared_from_this();
   ThreadPool::Instance().AddThread(std::thread([self, use_pool] {
-    DLOG(INFO) << "Connection reader start";
+    DLOG(INFO) << "[Connection reader start]";
     error_code err;
     while (!self->is_close_) {
       Message msg;
@@ -35,14 +37,14 @@ void Connection::StartReader() {
         CREATE_THREAD_
       }
     }
-    DLOG(INFO) << "Connection reader end";
+    DLOG(INFO) << "[Connection reader end]";
   }));
 }
 
 void Connection::StartWriter() {
   auto self = this->shared_from_this();
   ThreadPool::Instance().AddThread(std::thread([self] {
-    DLOG(INFO) << "Connection writer start";
+    DLOG(INFO) << "[Connection writer start]";
     while (!self->is_close_) {
       auto data = self->buffer_.PopAll();
       if (data.empty()) {
@@ -59,18 +61,25 @@ void Connection::StartWriter() {
         break;
       }
     }
-    DLOG(INFO) << "Connection writer end";
+    DLOG(INFO) << "[Connection writer end]";
   }));
 }
 
 void Connection::Stop() {
+  if (this->is_close_) {
+    return;
+  }
   this->is_close_ = true;
+
+  this->server_.CallOnConnectionStop(*this);
+
   this->buffer_.Finish();
   error_code err;
   this->socket_.close(err);
   if (err) {
     LOG(ERROR) << "Socket close failed";
   }
+  this->server_.GetConnManager().Remove(this->shared_from_this());
 }
 
 auto Connection::GetConnectionId() const -> uint32_t {

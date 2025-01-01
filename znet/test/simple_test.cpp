@@ -33,11 +33,7 @@ int main(int argc, char* argv[]) {
   std::this_thread::sleep_for(std::chrono::seconds(3));
 
   auto client = [&](std::string data, int cnt) {
-    Message msg;
-    msg.SetDataLen(data.size());
-    for (size_t i = 0; i < data.size(); i++) {
-      msg.GetData()[i] = static_cast<uint8_t>(data[i]);
-    }
+    Message msg(0, data);
 
     io_service service;
     ip::tcp::socket client(service);
@@ -57,11 +53,7 @@ int main(int argc, char* argv[]) {
         LOG(ERROR) << "client recv data failed: " << err;
         break;
       }
-      std::string recv_data;
-      for (const auto& c : recv_msg.GetData()) {
-        recv_data += static_cast<char>(c);
-      }
-      LOG(INFO) << " server call back : " << recv_data
+      LOG(INFO) << " server call back : " << recv_msg.ToString()
                 << ", cnt = " << recv_msg.GetDataLen();
       std::this_thread::sleep_for(std::chrono::seconds(1));
     }
@@ -72,8 +64,7 @@ int main(int argc, char* argv[]) {
   };
   std::vector<std::thread> threads;
   threads.emplace_back(client, "hello ZINX", std::numeric_limits<int>::max());
-  std::vector<std::string> datas = {"ab cd c e", "ooOooO", "19 10", "ad10 - 1",
-                                    "?.,[]"};
+  std::vector<std::string> datas = {"ooOooO", "19 10", "ad10 - 1", "?.,[]"};
   for (const auto& data : datas) {
     threads.emplace_back(client, data, 10);
   }
