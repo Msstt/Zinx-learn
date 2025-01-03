@@ -6,6 +6,9 @@
 - boost-asio
 - nlohmann-json
 
+V0: 搭建 Zinx 框架
+V1: 实现 MMO 服务器
+
 V0.1
 - 回显服务器
 
@@ -42,3 +45,6 @@ V0.9
 
 V0.10
 - 实现链接属性设置
+
+V1.1
+- 添加 AOIManager，实现 2D 地图的划分、九宫格信息更新与查询

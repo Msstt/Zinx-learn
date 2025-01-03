@@ -16,3 +16,5 @@ link_libraries(gtest pthread glog)
 add_subdirectory(utils)
 
 add_subdirectory(znet)
+
+add_subdirectory(core)
