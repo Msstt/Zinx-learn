@@ -51,7 +51,7 @@ void Connection::StartWriter() {
         continue;
       }
 
-      std::unique_lock<std::mutex> lock(self->mutex_);
+      std::unique_lock<std::mutex> lock(self->socket_mutex_);
       auto ret = SocketExactWrite(data, self->socket_);
       if (ret != ErrorKind::OK_) {
         if (ret != ErrorKind::EOF_) {
@@ -111,7 +111,7 @@ auto Connection::SendMsg(ip::tcp::socket &socket, const IMessage &msg)
 }
 
 auto Connection::RecvMsg(IMessage &msg) -> ErrorKind {
-  std::unique_lock<std::mutex> lock(this->mutex_);
+  std::unique_lock<std::mutex> lock(this->socket_mutex_);
   DataPack pack;
   std::vector<uint8_t> buf(pack.GetHeadLen());
   auto ret = SocketExactRead(this->socket_, buf);
@@ -137,4 +137,24 @@ auto Connection::RecvMsg(ip::tcp::socket &socket, IMessage &msg) -> ErrorKind {
     return ErrorKind::OK_;
   }
   return SocketExactRead(socket, msg.GetData());
+}
+
+void Connection::SetProperty(std::string key, std::shared_ptr<void> value) {
+  std::unique_lock lock(this->properties_mutex_);
+  this->properties_[key] = value;
+}
+
+auto Connection::GetProperty(std::string key,
+                             std::shared_ptr<void> &value) const -> bool {
+  std::shared_lock lock(this->properties_mutex_);
+  if (this->properties_.find(key) == this->properties_.end()) {
+    return false;
+  }
+  value = this->properties_.at(key);
+  return true;
+}
+
+void Connection::RemoveProperty(std::string key) {
+  std::unique_lock lock(this->properties_mutex_);
+  this->properties_.erase(key);
 }

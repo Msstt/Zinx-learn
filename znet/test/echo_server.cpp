@@ -12,10 +12,22 @@ void Stop(const boost::system::error_code& error, int signal_number) {}
 void DoStart(IConnection& connection) {
   LOG(INFO) << "Call start function";
   connection.SendMsg(Message(2, "Do connection start..."));
+
+  connection.SetProperty("name", std::make_shared<std::string>("Zinx"));
 }
 
 void DoStop(IConnection& connection) {
   LOG(INFO) << "Call stop function";
+
+  std::shared_ptr<void> value;
+  if (!connection.GetProperty("name", value)) {
+    LOG(ERROR) << "Get property failed";
+    exit(-1);
+  }
+  if (*std::static_pointer_cast<std::string>(value) != "Zinx") {
+    LOG(ERROR) << "Get property error";
+    exit(-1);
+  }
 }
 
 int main(int argc, char* argv[]) {

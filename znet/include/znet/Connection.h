@@ -1,4 +1,6 @@
 #pragma once
+#include <shared_mutex>
+
 #include "utils/Prelude.h"
 #include "ziface/IConnection.h"
 #include "ziface/IMsgHandle.h"
@@ -29,15 +31,22 @@ class Connection : public IConnection,
   static auto SendMsg(ip::tcp::socket &, const IMessage &) -> ErrorKind;
   static auto RecvMsg(ip::tcp::socket &, IMessage &) -> ErrorKind;
 
+  void SetProperty(std::string, std::shared_ptr<void>) override;
+  auto GetProperty(std::string, std::shared_ptr<void> &) const -> bool override;
+  void RemoveProperty(std::string) override;
+
  private:
   void StartReader();
   void StartWriter();
 
   std::atomic<bool> is_close_{false};
-  std::mutex mutex_{};
+  std::mutex socket_mutex_{};
   ip::tcp::socket socket_;
   uint32_t connection_id_;
   IMsgHandle &msg_handle_;
   SyncQueue<uint8_t> buffer_;
   IServer &server_;
+
+  mutable std::shared_mutex properties_mutex_{};
+  std::map<std::string, std::shared_ptr<void>> properties_{};
 };
