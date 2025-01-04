@@ -5,6 +5,7 @@
 - glog
 - boost-asio
 - nlohmann-json
+- protobuf
 
 V0: 搭建 Zinx 框架
 V1: 实现 MMO 服务器
@@ -48,3 +49,8 @@ V0.10
 
 V1.1
 - 添加 AOIManager，实现 2D 地图的划分、九宫格信息更新与查询
+
+V1.2
+- 添加 protobuf 消息类，实现与 Unity 客户端的通信
+- 添加 Player 类管理用户
+- 实现用户登录功能

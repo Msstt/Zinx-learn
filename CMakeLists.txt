@@ -13,6 +13,8 @@ link_libraries(gtest pthread glog)
 # glog 配置
 # add_definitions("-DNDEBUG")
 
+add_subdirectory(protobuf)
+
 add_subdirectory(utils)
 
 add_subdirectory(znet)

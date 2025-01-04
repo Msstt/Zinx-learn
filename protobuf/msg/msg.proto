@@ -1,0 +1,37 @@
+syntax = "proto3";                //Proto协议
+package pb;                     //当前包名
+option csharp_namespace = "Pb";   //给C#提供的选项
+
+message SyncPlayerId {
+  int32 playerId = 1;
+}
+
+message Talk {
+  string content = 1;
+}
+
+message Position {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+  float v = 4;
+}
+
+message BroadCast {
+  int32 playerId = 1;
+  int32 type = 2;
+  oneof Data {
+    string content = 3;
+    Position position = 4;
+  	int32 actionData = 5;
+  }
+}
+
+message Player {
+  int32 playerId = 1;
+  Position position = 2;
+}
+
+message SyncPlayers {
+  repeated Player players = 1;
+}

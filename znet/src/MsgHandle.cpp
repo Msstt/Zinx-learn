@@ -27,6 +27,7 @@ void MsgHandle::DoMsgHandler(IRequest &request) {
   if (!this->apis_.count(request.GetMsg().GetId())) {
     LOG(ERROR) << "api msgId = " << request.GetMsg().GetId()
                << " is not found!";
+    return;
   }
   auto &router = *this->apis_[request.GetMsg().GetId()];
   router.PreHandle(request);

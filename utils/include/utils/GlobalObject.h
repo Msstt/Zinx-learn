@@ -8,12 +8,12 @@ class GlobalObject {
  public:
   static auto Instance() -> GlobalObject &;
 
+  void LoadConfig(const std::string &conf_name = "zinx");
+
  private:
   GlobalObject();
   GlobalObject(const GlobalObject &) = delete;
   auto operator=(const GlobalObject &) -> GlobalObject & = delete;
-
-  void LoadConfig();
 
  public:
   std::string name_{""};
