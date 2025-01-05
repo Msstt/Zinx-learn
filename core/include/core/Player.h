@@ -24,8 +24,8 @@ class Player {
   auto GetId() -> size_t;
 
   void SyncPlayerId();
-
   void BroadCastStartPosition();
+  void Talk(const std::string&);
 
  private:
   void SendMsg(uint32_t, const google::protobuf::Message&);

@@ -1,4 +1,5 @@
 #pragma once
+#include "protobuf/msg.pb.h"
 #include "ziface/IMessage.h"
 
 class Message : public IMessage {
@@ -20,3 +21,6 @@ class Message : public IMessage {
   uint32_t id_{0};
   std::vector<uint8_t> data_{};
 };
+
+void MessageToProtobuf(const IMessage &, google::protobuf::Message &);
+void ProtobufToMessage(const google::protobuf::Message &, IMessage &);

@@ -30,3 +30,16 @@ auto Message::ToString() const -> std::string {
   }
   return ret;
 }
+
+void MessageToProtobuf(const IMessage &msg, google::protobuf::Message &pb_msg) {
+  std::string data_stream(msg.GetData().begin(), msg.GetData().end());
+  pb_msg.ParseFromString(data_stream);
+}
+
+void ProtobufToMessage(const google::protobuf::Message &pb_msg, IMessage &msg) {
+  std::string data_stream = pb_msg.SerializeAsString();
+  msg.SetDataLen(data_stream.size());
+  for (size_t i = 0; i < data_stream.size(); i++) {
+    msg.GetData()[i] = static_cast<uint8_t>(data_stream[i]);
+  }
+}

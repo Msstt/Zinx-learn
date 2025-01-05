@@ -139,22 +139,20 @@ auto Connection::RecvMsg(ip::tcp::socket &socket, IMessage &msg) -> ErrorKind {
   return SocketExactRead(socket, msg.GetData());
 }
 
-void Connection::SetProperty(std::string key, std::shared_ptr<void> value) {
+void Connection::SetProperty(const std::string& key, std::shared_ptr<void> value) {
   std::unique_lock lock(this->properties_mutex_);
   this->properties_[key] = value;
 }
 
-auto Connection::GetProperty(std::string key,
-                             std::shared_ptr<void> &value) const -> bool {
+auto Connection::GetProperty(const std::string& key) const -> std::shared_ptr<void> {
   std::shared_lock lock(this->properties_mutex_);
   if (this->properties_.find(key) == this->properties_.end()) {
-    return false;
+    return nullptr;
   }
-  value = this->properties_.at(key);
-  return true;
+  return this->properties_.at(key);
 }
 
-void Connection::RemoveProperty(std::string key) {
+void Connection::RemoveProperty(const std::string& key) {
   std::unique_lock lock(this->properties_mutex_);
   this->properties_.erase(key);
 }

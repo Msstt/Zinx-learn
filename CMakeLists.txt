@@ -20,3 +20,17 @@ add_subdirectory(utils)
 add_subdirectory(znet)
 
 add_subdirectory(core)
+
+add_subdirectory(api)
+
+set(INCLUDE)
+list(APPEND INCLUDE ${CMAKE_SOURCE_DIR}/ziface/include)
+list(APPEND INCLUDE ${CMAKE_SOURCE_DIR}/protobuf/include)
+list(APPEND INCLUDE ${CMAKE_SOURCE_DIR}/utils/include)
+list(APPEND INCLUDE ${CMAKE_SOURCE_DIR}/znet/include)
+list(APPEND INCLUDE ${CMAKE_SOURCE_DIR}/core/include)
+list(APPEND INCLUDE ${CMAKE_SOURCE_DIR}/api/include)
+
+add_executable(server Server.cpp)
+target_include_directories(server PUBLIC ${INCLUDE})
+target_link_libraries(server api)

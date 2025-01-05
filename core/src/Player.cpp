@@ -1,5 +1,7 @@
 #include "core/Player.h"
 
+#include "core/WorldManager.h"
+
 auto PlayerId::Instance() -> PlayerId& {
   static PlayerId instance;
   return instance;
@@ -22,15 +24,9 @@ void Player::SendMsg(uint32_t msg_id, const google::protobuf::Message& data) {
   LOG(INFO) << "Ready to send ===> id: " << msg_id << " data: ";
   LOG(INFO) << data.DebugString();
 
-  std::string data_stream = data.SerializeAsString();
-  // DLOG(INFO) << "              ===> stream: " << data_stream;
-
   Message msg;
   msg.SetId(msg_id);
-  msg.SetDataLen(data_stream.size());
-  for (size_t i = 0; i < data_stream.size(); i++) {
-    msg.GetData()[i] = static_cast<uint8_t>(data_stream[i]);
-  }
+  ProtobufToMessage(data, msg);
 
   this->connection_.SendMsg(msg);
 }
@@ -51,4 +47,16 @@ void Player::BroadCastStartPosition() {
   data.mutable_position()->set_z(this->z_);
   data.mutable_position()->set_v(this->v_);
   this->SendMsg(200, data);
+}
+
+void Player::Talk(const std::string& content) {
+  pb::BroadCast msg;
+  msg.set_playerid(this->player_id_);
+  msg.set_type(1);
+  *msg.mutable_content() = content;
+
+  auto players = WorldManager::Instance().GetAllPlayers();
+  for (const auto& player : players) {
+    player->SendMsg(200, msg);
+  }
 }

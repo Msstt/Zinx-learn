@@ -11,11 +11,6 @@ target_include_directories(core_test PUBLIC ${INCLUDE})
 target_link_libraries(core_test protomsg utils znet)
 add_custom_target(core_test_done COMMAND ./core_test DEPENDS core_test)
 
-add_executable(server ${SRC} Server.cpp)
-target_include_directories(server PUBLIC ${INCLUDE})
-target_link_libraries(server protomsg utils znet)
-add_dependencies(server core_test_done)
-
 add_library(core SHARED ${SRC})
 target_include_directories(core PUBLIC ${INCLUDE})
 target_link_libraries(core PUBLIC protomsg utils znet)

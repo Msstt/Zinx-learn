@@ -19,8 +19,8 @@ void DoStart(IConnection& connection) {
 void DoStop(IConnection& connection) {
   LOG(INFO) << "Call stop function";
 
-  std::shared_ptr<void> value;
-  if (!connection.GetProperty("name", value)) {
+  std::shared_ptr<void> value = connection.GetProperty("name");
+  if (!value) {
     LOG(ERROR) << "Get property failed";
     exit(-1);
   }

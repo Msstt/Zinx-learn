@@ -5,5 +5,11 @@
     "MaxConnectionNumber": 5,
     "WorkerPoolSize": 10,
     "MaxWorkerTaskLength": 1024,
-    "MaxDataBufferSize": 1024
+    "MaxDataBufferSize": 1024,
+    "AOIMinX": 85,
+    "AOIMaxX": 410,
+    "AOICountX": 10,
+    "AOIMinY": 75,
+    "AOIMaxY": 400,
+    "AOICountY": 20
 }

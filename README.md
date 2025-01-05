@@ -54,3 +54,7 @@ V1.2
 - 添加 protobuf 消息类，实现与 Unity 客户端的通信
 - 添加 Player 类管理用户
 - 实现用户登录功能
+
+V1.3
+- 添加 WorldManager 类，管理 AOIManager 和所有的 Player
+- 添加 WorldChatAPI 类，实现世界聊天

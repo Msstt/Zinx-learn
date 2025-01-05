@@ -21,6 +21,13 @@ void GlobalObject::LoadConfig(const std::string& conf_name) {
     this->worker_pool_size_ = config["WorkerPoolSize"];
     this->max_worker_task_length_ = config["MaxWorkerTaskLength"];
     this->max_data_buffer_size_ = config["MaxDataBufferSize"];
+
+    this->aoi_min_x_ = config["AOIMinX"];
+    this->aoi_max_x_ = config["AOIMaxX"];
+    this->aoi_count_x_ = config["AOICountX"];
+    this->aoi_min_y_ = config["AOIMinY"];
+    this->aoi_max_y_ = config["AOIMaxY"];
+    this->aoi_count_y_ = config["AOICountY"];
   } catch (...) {
     LOG(FATAL) << "GlobalObject parse \"./conf/zinx.json\" failed";
   }
