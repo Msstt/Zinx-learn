@@ -110,3 +110,20 @@ void Player::Move(double x, double y, double z, double v) {
     player->SendMsg(200, msg);
   }
 }
+
+void Player::LostConnection() {
+  WorldManager::Instance().RemovePlayer(this->player_id_);
+
+  pb::SyncPlayerId msg;
+  msg.set_playerid(this->player_id_);
+
+  auto player_ids =
+      WorldManager::Instance().GetAOIManager().GetPlayerIds(this->x_, this->z_);
+  for (auto player_id : player_ids) {
+    auto player = WorldManager::Instance().GetPlayer(player_id);
+    if (player == nullptr) {
+      continue;
+    }
+    player->SendMsg(201, msg);
+  }
+}

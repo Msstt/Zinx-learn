@@ -32,6 +32,7 @@ class Player {
   void Talk(const std::string&);
   void SyncSurrounding();
   void Move(double x, double y, double z, double v);
+  void LostConnection();
 
   auto GetPositionMsg() -> pb::Player;
 

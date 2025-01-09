@@ -13,6 +13,11 @@ void WorldManager::AddPlayer(const std::shared_ptr<Player>& player) {
 
 void WorldManager::RemovePlayer(const size_t& player_id) {
   std::unique_lock lock(this->players_mutex_);
+  if (this->players_.find(player_id) == this->players_.end()) {
+    return;
+  }
+  auto player = this->players_.at(player_id);
+  this->aoi_.RemovePlayerId(player->x_, player->z_, player->GetId());
   this->players_.erase(player_id);
 }
 
