@@ -8,6 +8,7 @@ auto WorldManager::Instance() -> WorldManager& {
 void WorldManager::AddPlayer(const std::shared_ptr<Player>& player) {
   std::unique_lock lock(this->players_mutex_);
   this->players_[player->GetId()] = player;
+  this->aoi_.AddPlayerId(player->x_, player->z_, player->GetId());
 }
 
 void WorldManager::RemovePlayer(const size_t& player_id) {
@@ -32,4 +33,8 @@ auto WorldManager::GetAllPlayers() const
     ret.push_back(player);
   }
   return ret;
+}
+
+auto WorldManager::GetAOIManager() const -> const AOIManager& {
+  return this->aoi_;
 }

@@ -11,6 +11,8 @@ class WorldManager {
   auto GetPlayer(const size_t&) const -> std::shared_ptr<Player>;
   auto GetAllPlayers() const -> std::vector<std::shared_ptr<Player>>;
 
+  auto GetAOIManager() const -> const AOIManager&;
+
  private:
   WorldManager()
       : aoi_(GlobalObject::Instance().aoi_min_x_,

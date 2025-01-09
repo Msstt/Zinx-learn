@@ -32,21 +32,29 @@ void Player::SendMsg(uint32_t msg_id, const google::protobuf::Message& data) {
 }
 
 void Player::SyncPlayerId() {
-  pb::SyncPlayerId data;
-  data.set_playerid(this->player_id_);
-  DLOG(INFO) << "??" << data.DebugString();
-  this->SendMsg(1, data);
+  pb::SyncPlayerId msg;
+  msg.set_playerid(this->player_id_);
+  this->SendMsg(1, msg);
 }
 
 void Player::BroadCastStartPosition() {
-  pb::BroadCast data;
-  data.set_playerid(this->player_id_);
-  data.set_type(2);
-  data.mutable_position()->set_x(this->x_);
-  data.mutable_position()->set_y(this->y_);
-  data.mutable_position()->set_z(this->z_);
-  data.mutable_position()->set_v(this->v_);
-  this->SendMsg(200, data);
+  pb::BroadCast msg;
+  msg.set_playerid(this->player_id_);
+  msg.set_type(2);
+  msg.mutable_position()->set_x(this->x_);
+  msg.mutable_position()->set_y(this->y_);
+  msg.mutable_position()->set_z(this->z_);
+  msg.mutable_position()->set_v(this->v_);
+
+  auto player_ids =
+      WorldManager::Instance().GetAOIManager().GetPlayerIds(this->x_, this->z_);
+  for (auto player_id : player_ids) {
+    auto player = WorldManager::Instance().GetPlayer(player_id);
+    if (player == nullptr) {
+      continue;
+    }
+    player->SendMsg(200, msg);
+  }
 }
 
 void Player::Talk(const std::string& content) {
@@ -59,4 +67,26 @@ void Player::Talk(const std::string& content) {
   for (const auto& player : players) {
     player->SendMsg(200, msg);
   }
+}
+
+auto Player::GetPositionMsg() -> pb::Player {
+  pb::Player msg;
+  msg.set_playerid(this->player_id_);
+  msg.mutable_position()->set_x(this->x_);
+  msg.mutable_position()->set_y(this->y_);
+  msg.mutable_position()->set_z(this->z_);
+  msg.mutable_position()->set_v(this->v_);
+  return msg;
+}
+
+void Player::SyncSurrounding() {
+  pb::SyncPlayers msg;
+  auto player_ids =
+      WorldManager::Instance().GetAOIManager().GetPlayerIds(this->x_, this->z_);
+  for (auto player_id : player_ids) {
+    auto position_msg =
+        WorldManager::Instance().GetPlayer(player_id)->GetPositionMsg();
+    *msg.add_players() = position_msg;
+  }
+  this->SendMsg(202, msg);
 }

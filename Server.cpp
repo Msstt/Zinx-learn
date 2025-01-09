@@ -5,12 +5,12 @@
 
 void OnConnectionAdd(IConnection& connection) {
   auto player = std::make_shared<Player>(connection);
+  WorldManager::Instance().AddPlayer(player);
+  connection.SetProperty("PlayerId", std::make_shared<size_t>(player->GetId()));
 
   player->SyncPlayerId();
   player->BroadCastStartPosition();
-
-  WorldManager::Instance().AddPlayer(player);
-  connection.SetProperty("PlayerId", std::make_shared<size_t>(player->GetId()));
+  player->SyncSurrounding();
 
   LOG(INFO) << "=====> Player pidId = " << player->GetId() << " arrived ====";
 }

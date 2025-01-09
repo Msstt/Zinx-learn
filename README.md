@@ -58,3 +58,6 @@ V1.2
 V1.3
 - 添加 WorldManager 类，管理 AOIManager 和所有的 Player
 - 添加 WorldChatAPI 类，实现世界聊天
+
+V1.4
+- 实现上线位置的信息同步功能，客户端能够看到其他玩家

@@ -17,7 +17,10 @@ class PlayerId {
   size_t player_id_{0};
 };
 
+class WorldManager;
+
 class Player {
+  friend WorldManager;
  public:
   Player(IConnection&);
 
@@ -26,6 +29,9 @@ class Player {
   void SyncPlayerId();
   void BroadCastStartPosition();
   void Talk(const std::string&);
+  void SyncSurrounding();
+
+  auto GetPositionMsg() -> pb::Player;
 
  private:
   void SendMsg(uint32_t, const google::protobuf::Message&);
@@ -33,6 +39,7 @@ class Player {
   size_t player_id_;
   IConnection& connection_;
 
+protected:
   double x_;
   double y_{0};
   double z_;
