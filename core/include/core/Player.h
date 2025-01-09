@@ -21,6 +21,7 @@ class WorldManager;
 
 class Player {
   friend WorldManager;
+
  public:
   Player(IConnection&);
 
@@ -30,6 +31,7 @@ class Player {
   void BroadCastStartPosition();
   void Talk(const std::string&);
   void SyncSurrounding();
+  void Move(double x, double y, double z, double v);
 
   auto GetPositionMsg() -> pb::Player;
 
@@ -39,7 +41,7 @@ class Player {
   size_t player_id_;
   IConnection& connection_;
 
-protected:
+ protected:
   double x_;
   double y_{0};
   double z_;

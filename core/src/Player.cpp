@@ -90,3 +90,23 @@ void Player::SyncSurrounding() {
   }
   this->SendMsg(202, msg);
 }
+
+void Player::Move(double x, double y, double z, double v) {
+  this->x_ = x;
+  this->y_ = y;
+  this->z_ = z;
+  this->v_ = v;
+
+  pb::BroadCast msg;
+  msg.set_playerid(this->player_id_);
+  msg.set_type(4);
+  msg.mutable_position()->set_x(this->x_);
+  msg.mutable_position()->set_y(this->y_);
+  msg.mutable_position()->set_z(this->z_);
+  msg.mutable_position()->set_v(this->v_);
+
+  auto players = WorldManager::Instance().GetAllPlayers();
+  for (const auto& player : players) {
+    player->SendMsg(200, msg);
+  }
+}

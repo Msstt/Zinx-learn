@@ -1,5 +1,6 @@
 #include "znet/Server.h"
 
+#include "api/Move.h"
 #include "api/WorldChat.h"
 #include "core/WorldManager.h"
 
@@ -21,6 +22,7 @@ int main() {
   server->SetOnConnectionStart(OnConnectionAdd);
 
   server->AddRouter(2, std::make_shared<WorldChatAPI>());
+  server->AddRouter(3, std::make_shared<Move>());
 
   server->Serve();
 }
