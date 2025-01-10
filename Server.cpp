@@ -34,8 +34,8 @@ int main() {
   server->SetOnConnectionStart(OnConnectionAdd);
   server->SetOnConnectionStop(OnConnectionDel);
 
-  server->AddRouter(2, std::make_shared<WorldChatAPI>());
-  server->AddRouter(3, std::make_shared<Move>());
+  server->AddRouter(TALK_MSGID, std::make_shared<WorldChatAPI>());
+  server->AddRouter(MOVE_MSGID, std::make_shared<Move>());
 
   server->Serve();
 }

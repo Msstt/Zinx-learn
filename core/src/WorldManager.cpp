@@ -40,6 +40,13 @@ auto WorldManager::GetAllPlayers() const
   return ret;
 }
 
-auto WorldManager::GetAOIManager() const -> const AOIManager& {
-  return this->aoi_;
+auto WorldManager::GetAOIManager() -> AOIManager& { return this->aoi_; }
+
+void WorldManager::LogAllPlayers() {
+  for (auto [player_id, player] : this->players_) {
+    LOG(INFO) << "Player_" << player->GetId() << " at(" << player->x_ << ","
+              << player->y_ << "," << player->z_ << "," << player->v_
+              << ") now, grid_id: "
+              << this->aoi_.GetGridId(player->x_, player->z_);
+  }
 }

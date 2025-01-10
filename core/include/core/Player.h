@@ -2,6 +2,7 @@
 #include "protobuf/msg.pb.h"
 #include "znet/Connection.h"
 #include "znet/Message.h"
+#include "core/Prelude.h"
 
 class PlayerId {
  public:
@@ -38,6 +39,8 @@ class Player {
 
  private:
   void SendMsg(uint32_t, const google::protobuf::Message&);
+
+  void ChangeGrid(size_t, size_t);
 
   size_t player_id_;
   IConnection& connection_;

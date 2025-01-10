@@ -11,7 +11,9 @@ class WorldManager {
   auto GetPlayer(const size_t&) const -> std::shared_ptr<Player>;
   auto GetAllPlayers() const -> std::vector<std::shared_ptr<Player>>;
 
-  auto GetAOIManager() const -> const AOIManager&;
+  auto GetAOIManager() -> AOIManager&;
+
+  void LogAllPlayers();
 
  private:
   WorldManager()

@@ -29,12 +29,12 @@ auto AOIManager::XYToGridId(size_t x_id, size_t y_id) const -> size_t {
   return x_id * this->cnt_y_ + y_id;
 }
 
-auto AOIManager::GetSurroundGrids(size_t grid_id) const -> std::vector<int> {
+auto AOIManager::GetSurroundGrids(size_t grid_id) const -> std::vector<size_t> {
   auto exist = [&](size_t x_id, size_t y_id) {
     return x_id < this->cnt_x_ && y_id < this->cnt_y_;
   };
 
-  std::vector<int> ret;
+  std::vector<size_t> ret;
   auto [x_id, y_id] = this->GridIdToXY(grid_id);
   for (int nx = -1; nx <= 1; nx++) {
     for (int ny = -1; ny <= 1; ny++) {
@@ -56,13 +56,13 @@ auto AOIManager::GetGridId(double x, double y) const -> int {
   return x_id * this->cnt_y_ + y_id;
 }
 
-auto AOIManager::GetPlayerIds(double x, double y) const -> std::vector<int> {
+auto AOIManager::GetPlayerIds(double x, double y) const -> std::vector<size_t> {
   auto grid_id = this->GetGridId(x, y);
   if (grid_id == -1) {
     return {};
   }
   auto surround_grid_ids = this->GetSurroundGrids(grid_id);
-  std::vector<int> ret;
+  std::vector<size_t> ret;
   for (const auto& grid_id : surround_grid_ids) {
     auto player_ids = this->grids_[grid_id]->GetPlayerIDs();
     for (const auto& player_id : player_ids) {
@@ -72,21 +72,21 @@ auto AOIManager::GetPlayerIds(double x, double y) const -> std::vector<int> {
   return ret;
 }
 
-auto AOIManager::GetPlayerIds(size_t grid_id) const -> std::vector<int> {
+auto AOIManager::GetPlayerIds(size_t grid_id) const -> std::vector<size_t> {
   if (grid_id > this->grids_.size()) {
     return {};
   }
   return this->grids_[grid_id]->GetPlayerIDs();
 }
 
-void AOIManager::AddPlayerId(size_t grid_id, int player_id) {
+void AOIManager::AddPlayerId(size_t grid_id, size_t player_id) {
   if (grid_id > this->grids_.size()) {
     return;
   }
   this->grids_[grid_id]->Add(player_id);
 }
 
-void AOIManager::AddPlayerId(double x, double y, int player_id) {
+void AOIManager::AddPlayerId(double x, double y, size_t player_id) {
   auto grid_id = this->GetGridId(x, y);
   if (grid_id == -1) {
     return;
@@ -94,14 +94,14 @@ void AOIManager::AddPlayerId(double x, double y, int player_id) {
   this->grids_[grid_id]->Add(player_id);
 }
 
-void AOIManager::RemovePlayerId(size_t grid_id, int player_id) {
+void AOIManager::RemovePlayerId(size_t grid_id, size_t player_id) {
   if (grid_id > this->grids_.size()) {
     return;
   }
   this->grids_[grid_id]->Remove(player_id);
 }
 
-void AOIManager::RemovePlayerId(double x, double y, int player_id) {
+void AOIManager::RemovePlayerId(double x, double y, size_t player_id) {
   auto grid_id = this->GetGridId(x, y);
   if (grid_id == -1) {
     return;

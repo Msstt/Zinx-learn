@@ -13,9 +13,9 @@ class Grid {
         min_y_(min_y),
         max_y_(max_y) {}
 
-  void Add(int player_id);
-  void Remove(int player_id);
-  auto GetPlayerIDs() const -> std::vector<int>;
+  void Add(size_t player_id);
+  void Remove(size_t player_id);
+  auto GetPlayerIDs() const -> std::vector<size_t>;
 
  private:
   size_t grid_id_;
@@ -24,6 +24,6 @@ class Grid {
   int min_y_;
   int max_y_;
 
-  std::set<int> player_ids_{};
+  std::set<size_t> player_ids_{};
   mutable std::shared_mutex mutex_{};
 };

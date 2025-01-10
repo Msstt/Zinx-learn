@@ -7,21 +7,22 @@ class AOIManager {
   AOIManager(int, int, size_t, int, int, size_t);
 
   // 根据 grid_id 获取周围格子的 grid_id
-  auto GetSurroundGrids(size_t) const -> std::vector<int>;
+  auto GetSurroundGrids(size_t) const -> std::vector<size_t>;
   // 根据 (x, y) 获取_周围_格子的 player_ids
-  auto GetPlayerIds(double x, double y) const -> std::vector<int>;
+  auto GetPlayerIds(double x, double y) const -> std::vector<size_t>;
 
   // 根据 grid_id 获取_当前_格子的 player_ids
-  auto GetPlayerIds(size_t grid_id) const -> std::vector<int>;
-  void AddPlayerId(size_t grid_id, int player_id);
-  void AddPlayerId(double x, double y, int player_id);
-  void RemovePlayerId(size_t grid_id, int player_id);
-  void RemovePlayerId(double x, double y, int player_id);
+  auto GetPlayerIds(size_t grid_id) const -> std::vector<size_t>;
+  void AddPlayerId(size_t grid_id, size_t player_id);
+  void AddPlayerId(double x, double y, size_t player_id);
+  void RemovePlayerId(size_t grid_id, size_t player_id);
+  void RemovePlayerId(double x, double y, size_t player_id);
+
+  auto GetGridId(double x, double y) const -> int;
 
  private:
   auto GridIdToXY(size_t) const -> std::pair<size_t, size_t>;
   auto XYToGridId(size_t, size_t) const -> size_t;
-  auto GetGridId(double x, double y) const -> int;
 
   int min_x_;
   int max_x_;

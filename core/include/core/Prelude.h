@@ -1,0 +1,13 @@
+#pragma once
+
+#define SIGNIN_MSGID 1
+#define TALK_MSGID 2
+#define MOVE_MSGID 3
+#define BROADCAST_MSGID 200
+#define SIGNOUT_MSGID 201
+#define SYNC_MSGID 202
+
+#define BROADCAST_TALK 1
+#define BROADCAST_SIGNIN 2
+#define BROADCAST_ACTION 3
+#define BROADCAST_MOVE 4
