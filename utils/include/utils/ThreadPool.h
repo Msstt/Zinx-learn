@@ -1,16 +1,22 @@
 #pragma once
-#include <thread>
-#include <vector>
+#include <atomic>
 #include <mutex>
+#include <condition_variable>
+#include <thread>
+#include <deque>
+#include <functional>
 
 class ThreadPool {
-public:
-  static auto Instance() -> ThreadPool &;
-  void AddThread(std::thread thread);
+ public:
+  ThreadPool();
+  ~ThreadPool();
+  void AddThread(std::function<void()>);
+  void Close();
 
-private:
-  ThreadPool() = default;
-
+ private:
+  std::atomic<bool> is_close_{false};
   std::mutex mutex_{};
-  std::vector<std::thread> thread_{};
+  std::condition_variable cv_{};
+  std::deque<std::unique_ptr<std::thread>> threads_{};
+  std::unique_ptr<std::thread> cleaner_{};
 };

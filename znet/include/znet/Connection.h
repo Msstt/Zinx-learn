@@ -31,9 +31,9 @@ class Connection : public IConnection,
   static auto SendMsg(ip::tcp::socket &, const IMessage &) -> ErrorKind;
   static auto RecvMsg(ip::tcp::socket &, IMessage &) -> ErrorKind;
 
-  void SetProperty(const std::string&, std::shared_ptr<void>) override;
-  auto GetProperty(const std::string&) const -> std::shared_ptr<void> override;
-  void RemoveProperty(const std::string&) override;
+  void SetProperty(const std::string &, std::shared_ptr<void>) override;
+  auto GetProperty(const std::string &) const -> std::shared_ptr<void> override;
+  void RemoveProperty(const std::string &) override;
 
  private:
   void StartReader();
@@ -49,4 +49,6 @@ class Connection : public IConnection,
 
   mutable std::shared_mutex properties_mutex_{};
   std::map<std::string, std::shared_ptr<void>> properties_{};
+
+  ThreadPool handlers_{};
 };

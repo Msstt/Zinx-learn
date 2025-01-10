@@ -38,6 +38,8 @@ class Server : public IServer {
   // 回调函数
   std::function<void(IConnection&)> on_connection_start_{};
   std::function<void(IConnection&)> on_connection_stop_{};
+
+  std::unique_ptr<std::thread> thread_{};
 };
 
 auto NewServer() -> std::unique_ptr<IServer>;

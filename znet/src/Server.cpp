@@ -38,7 +38,7 @@ void Server::Start() {
   LOG(INFO) << "[START] Server listenner at IP: " << this->ip_ << ", Port "
             << this->port_ << ", is starting";
   this->msg_handle_.StartWorkerPool();
-  CREATE_THREAD {
+  thread_ = std::make_unique<std::thread>([&]() {
     io_service service;
     auto acceptor = ip::tcp::acceptor(service);
     if (!InitAccpetor(acceptor, this->ip_, this->port_)) {
@@ -71,8 +71,7 @@ void Server::Start() {
       connecion->Start();
     }
     DLOG(INFO) << "[Server thread stop]";
-  }
-  CREATE_THREAD_
+  });
 }
 
 void Server::Stop() {

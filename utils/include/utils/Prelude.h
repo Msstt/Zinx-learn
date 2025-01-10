@@ -10,10 +10,6 @@
 using namespace boost::asio;
 using namespace boost::system;
 
-#define CREATE_THREAD ThreadPool::Instance().AddThread(std::thread([&]()
-#define CREATE_THREAD__(x) ThreadPool::Instance().AddThread(std::thread([&, x]()
-#define CREATE_THREAD_ ));
-
 enum class ErrorKind { OK_, EOF_, ERROR_ };
 
 void LittleEndianWrite(const uint32_t &, uint8_t *);

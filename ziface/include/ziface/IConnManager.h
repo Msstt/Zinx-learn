@@ -11,4 +11,7 @@ class IConnManager {
   virtual auto Get(uint32_t) -> std::shared_ptr<IConnection> = 0;
   virtual auto GetConnectionCount() -> uint32_t = 0;
   virtual void ClearConnection() = 0;
+
+  virtual void AddReaderThread(uint32_t, std::function<void()>) = 0;
+  virtual void AddWriterThread(uint32_t, std::function<void()>) = 0;
 };

@@ -15,7 +15,7 @@ void Connection::StartReader() {
   auto use_pool = GlobalObject::Instance().worker_pool_size_ != 0;
 
   auto self = this->shared_from_this();
-  ThreadPool::Instance().AddThread(std::thread([self, use_pool] {
+  this->server_.GetConnManager().AddReaderThread(this->connection_id_, [=] {
     DLOG(INFO) << "[Connection reader start]";
     error_code err;
     while (!self->is_close_) {
@@ -33,17 +33,18 @@ void Connection::StartReader() {
       if (use_pool) {
         self->msg_handle_.SendMsgToTaskQueue(request);
       } else {
-        CREATE_THREAD__(request) { self->msg_handle_.DoMsgHandler(*request); }
-        CREATE_THREAD_
+        self->handlers_.AddThread(
+            [&, request]() { self->msg_handle_.DoMsgHandler(*request);
+            });
       }
     }
     DLOG(INFO) << "[Connection reader end]";
-  }));
+  });
 }
 
 void Connection::StartWriter() {
   auto self = this->shared_from_this();
-  ThreadPool::Instance().AddThread(std::thread([self] {
+  this->server_.GetConnManager().AddWriterThread(this->connection_id_, [=] {
     DLOG(INFO) << "[Connection writer start]";
     while (!self->is_close_) {
       auto data = self->buffer_.PopAll();
@@ -62,7 +63,7 @@ void Connection::StartWriter() {
       }
     }
     DLOG(INFO) << "[Connection writer end]";
-  }));
+  });
 }
 
 void Connection::Stop() {
@@ -139,12 +140,14 @@ auto Connection::RecvMsg(ip::tcp::socket &socket, IMessage &msg) -> ErrorKind {
   return SocketExactRead(socket, msg.GetData());
 }
 
-void Connection::SetProperty(const std::string& key, std::shared_ptr<void> value) {
+void Connection::SetProperty(const std::string &key,
+                             std::shared_ptr<void> value) {
   std::unique_lock lock(this->properties_mutex_);
   this->properties_[key] = value;
 }
 
-auto Connection::GetProperty(const std::string& key) const -> std::shared_ptr<void> {
+auto Connection::GetProperty(const std::string &key) const
+    -> std::shared_ptr<void> {
   std::shared_lock lock(this->properties_mutex_);
   if (this->properties_.find(key) == this->properties_.end()) {
     return nullptr;
@@ -152,7 +155,7 @@ auto Connection::GetProperty(const std::string& key) const -> std::shared_ptr<vo
   return this->properties_.at(key);
 }
 
-void Connection::RemoveProperty(const std::string& key) {
+void Connection::RemoveProperty(const std::string &key) {
   std::unique_lock lock(this->properties_mutex_);
   this->properties_.erase(key);
 }

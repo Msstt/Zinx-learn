@@ -1,11 +1,33 @@
 #include "utils/ThreadPool.h"
 
-auto ThreadPool::Instance() -> ThreadPool & {
-  static ThreadPool instance;
-  return instance;
+ThreadPool::ThreadPool() {
+  this->cleaner_ = std::make_unique<std::thread>([&]() {
+    while (!this->is_close_ || !this->threads_.empty()) {
+      std::unique_lock lock(this->mutex_);
+      if (this->threads_.empty()) {
+        this->cv_.wait(lock);
+      }
+      if (this->threads_.empty()) {
+        continue;
+      }
+      this->threads_.front()->join();
+      this->threads_.pop_front();
+    }
+  });
 }
 
-void ThreadPool::AddThread(std::thread thread) {
-  std::unique_lock<std::mutex> lock(this->mutex_);
-  this->thread_.emplace_back(std::move(thread));
+ThreadPool::~ThreadPool() {
+  this->Close();
+}
+
+void ThreadPool::AddThread(std::function<void()> func) {
+  std::unique_lock lock(this->mutex_);
+  this->threads_.push_back(std::make_unique<std::thread>(func));
+  this->cv_.notify_one();
+}
+
+void ThreadPool::Close() {
+  this->is_close_ = true;
+  this->cv_.notify_one();
+  this->cleaner_->join();
 }
