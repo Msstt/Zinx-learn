@@ -6,10 +6,14 @@
     "WorkerPoolSize": 10,
     "MaxWorkerTaskLength": 1024,
     "MaxDataBufferSize": 1024,
-    "AOIMinX": 85,
-    "AOIMaxX": 410,
-    "AOICountX": 10,
-    "AOIMinY": 75,
-    "AOIMaxY": 400,
-    "AOICountY": 20
+    "AOIMinX": -15,
+    "AOIMaxX": 15,
+    "AOICountX": 1,
+    "AOIMinY": -40,
+    "AOIMaxY": 40,
+    "AOICountY": 2,
+    "BornMinX": -6,
+    "BornMaxX": 6,
+    "BornMinY": -8,
+    "BornMaxY": 7
 }

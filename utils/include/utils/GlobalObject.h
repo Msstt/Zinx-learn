@@ -33,4 +33,9 @@ class GlobalObject {
   int32_t aoi_min_y_{0};
   int32_t aoi_max_y_{0};
   uint32_t aoi_count_y_{0};
+
+  int32_t born_min_x_{0};
+  int32_t born_max_x_{0};
+  int32_t born_min_y_{0};
+  int32_t born_max_y_{0};
 };

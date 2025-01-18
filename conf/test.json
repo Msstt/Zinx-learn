@@ -11,5 +11,9 @@
     "AOICountX": 10,
     "AOIMinY": 75,
     "AOIMaxY": 400,
-    "AOICountY": 20
+    "AOICountY": 20,
+    "BornMinX": 85,
+    "BornMaxX": 410,
+    "BornMinY": 75,
+    "BornMaxY": 400
 }

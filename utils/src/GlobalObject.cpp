@@ -28,6 +28,11 @@ void GlobalObject::LoadConfig(const std::string& conf_name) {
     this->aoi_min_y_ = config["AOIMinY"];
     this->aoi_max_y_ = config["AOIMaxY"];
     this->aoi_count_y_ = config["AOICountY"];
+
+    this->born_min_x_ = config["BornMinX"];
+    this->born_max_x_ = config["BornMaxX"];
+    this->born_min_y_ = config["BornMinY"];
+    this->born_max_y_ = config["BornMaxY"];
   } catch (...) {
     LOG(FATAL) << "GlobalObject parse \"./conf/zinx.json\" failed";
   }

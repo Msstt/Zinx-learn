@@ -14,14 +14,20 @@ auto PlayerId::GetPlayerId() -> size_t {
 
 Player::Player(IConnection& connection) : connection_(connection) {
   this->player_id_ = PlayerId::Instance().GetPlayerId();
-  this->x_ = 160 + rand() % 10;
-  this->z_ = 160 + rand() % 17;
+  int range_x = GlobalObject::Instance().born_max_x_ -
+                GlobalObject::Instance().born_min_x_;
+  int range_y = GlobalObject::Instance().born_max_y_ -
+                GlobalObject::Instance().born_min_y_;
+  this->x_ = GlobalObject::Instance().born_min_x_ + rand() % range_x;
+  this->z_ = GlobalObject::Instance().born_min_y_ + rand() % range_y;
 }
 
 auto Player::GetId() -> size_t { return this->player_id_; }
 
 void Player::SendMsg(uint32_t msg_id, const google::protobuf::Message& data) {
-  // LOG(INFO) << "Ready to send ===> id: " << msg_id << " data: ";
+  // LOG(INFO) << "Ready to send player " << this->player_id_
+  //           << " ===> id: " << msg_id << " data_size: " << data.ByteSizeLong()
+  //           << " data: ";
   // LOG(INFO) << data.DebugString();
 
   Message msg;
@@ -111,9 +117,11 @@ void Player::Move(double x, double y, double z, double v) {
   msg.mutable_position()->set_z(this->z_);
   msg.mutable_position()->set_v(this->v_);
 
-  auto players = WorldManager::Instance().GetAllPlayers();
-  for (const auto& player : players) {
-    player->SendMsg(BROADCAST_MSGID, msg);
+  auto players =
+      WorldManager::Instance().GetAOIManager().GetPlayerIds(this->x_, this->z_);
+  for (const auto& player_id : players) {
+    WorldManager::Instance().GetPlayer(player_id)->SendMsg(BROADCAST_MSGID,
+                                                           msg);
   }
 }
 
@@ -218,5 +226,5 @@ void Player::ChangeGrid(size_t old_grid_id, size_t new_grid_id) {
   }
 
   WorldManager::Instance().GetAOIManager().AddPlayerId(new_grid_id,
-                                                            this->player_id_);
+                                                       this->player_id_);
 }
