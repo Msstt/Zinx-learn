@@ -11,9 +11,9 @@ using namespace boost::asio;
 using namespace boost::system;
 
 void Server() {
-  io_service service;
+  io_context service;
   auto acceptor = ip::tcp::acceptor(
-      service, ip::tcp::endpoint(ip::address::from_string("127.0.0.1"), 7777));
+      service, ip::tcp::endpoint(ip::make_address("127.0.0.1"), 7777));
   ip::tcp::socket client(service);
   acceptor.accept(client);
   DataPack pack;
@@ -34,10 +34,10 @@ void Server() {
 }
 
 void Client() {
-  io_service service;
+  io_context service;
   ip::tcp::socket client(service);
   client.connect(
-      ip::tcp::endpoint(ip::address::from_string("127.0.0.1"), 7777));
+      ip::tcp::endpoint(ip::make_address("127.0.0.1"), 7777));
   DataPack pack;
   uint32_t id = 0;
   std::vector<std::string> data = {"hello", "ZINX"};

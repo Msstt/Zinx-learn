@@ -1,4 +1,6 @@
 #pragma once
+#include <map>
+
 #include "utils/Prelude.h"
 #include "ziface/IMsgHandle.h"
 

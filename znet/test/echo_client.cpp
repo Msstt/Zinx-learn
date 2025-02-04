@@ -10,7 +10,7 @@
 auto InitSocket(ip::tcp::socket& client, std::string ip, uint16_t port)
     -> bool {
   error_code err;
-  auto endpoint = ip::tcp::endpoint(ip::address::from_string(ip, err), port);
+  auto endpoint = ip::tcp::endpoint(ip::make_address(ip, err), port);
   if (err) {
     LOG(ERROR) << "client get ip fail: " << err;
     return false;
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
   Message msg(0, data);
 
   std::thread client([&]() {
-    io_service service;
+    io_context service;
     ip::tcp::socket client(service);
     if (!InitSocket(client, "127.0.0.1", 7777)) {
       LOG(ERROR) << "client connect failed!";
@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
     }
   });
 
-  io_service service;
+  io_context service;
   boost::asio::signal_set signals(service, SIGINT, SIGTERM);
   signals.async_wait(&Stop);
   service.run();

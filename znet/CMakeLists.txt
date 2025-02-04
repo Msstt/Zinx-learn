@@ -12,26 +12,26 @@ list(APPEND INCLUDE ${CMAKE_SOURCE_DIR}/znet/include)
 
 add_executable(znet_test ${TEST} ${SRC})
 target_include_directories(znet_test PUBLIC ${INCLUDE})
-target_link_libraries(znet_test protobuf utils)
+target_link_libraries(znet_test utils protomsg)
 add_custom_target(znet_test_done COMMAND ./znet_test DEPENDS znet_test)
 
 add_executable(simple_test test/simple_test.cpp ${SRC})
 target_include_directories(simple_test PUBLIC ${INCLUDE})
-target_link_libraries(simple_test protobuf utils)
+target_link_libraries(simple_test utils protomsg)
 
 add_executable(pack_test test/pack_test.cpp ${SRC})
 target_include_directories(pack_test PUBLIC ${INCLUDE})
-target_link_libraries(pack_test protobuf utils)
+target_link_libraries(pack_test utils protomsg)
 
 add_executable(echo_server test/echo_server.cpp ${SRC})
 target_include_directories(echo_server PUBLIC ${INCLUDE})
-target_link_libraries(echo_server protobuf utils)
+target_link_libraries(echo_server utils protomsg)
 
 add_executable(echo_client test/echo_client.cpp ${SRC})
 target_include_directories(echo_client PUBLIC ${INCLUDE})
-target_link_libraries(echo_client protobuf utils)
+target_link_libraries(echo_client utils protomsg)
 
 add_library(znet SHARED ${SRC})
 target_include_directories(znet PUBLIC ${INCLUDE})
-target_link_libraries(znet PUBLIC protobuf utils)
+target_link_libraries(znet PUBLIC utils protomsg)
 add_dependencies(znet znet_test_done)

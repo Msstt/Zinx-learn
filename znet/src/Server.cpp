@@ -3,7 +3,7 @@
 auto InitAccpetor(ip::tcp::acceptor &acceptor, std::string ip, uint16_t port)
     -> bool {
   error_code err;
-  auto endpoint = ip::tcp::endpoint(ip::address::from_string(ip, err), port);
+  auto endpoint = ip::tcp::endpoint(ip::make_address(ip, err), port);
   if (err) {
     LOG(ERROR) << "Server get ip fail: " << err;
     return false;
@@ -39,7 +39,7 @@ void Server::Start() {
             << this->port_ << ", is starting";
   this->msg_handle_.StartWorkerPool();
   thread_ = std::make_unique<std::thread>([&]() {
-    io_service service;
+    io_context service;
     auto acceptor = ip::tcp::acceptor(service);
     if (!InitAccpetor(acceptor, this->ip_, this->port_)) {
       return;

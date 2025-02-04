@@ -1,6 +1,6 @@
 {
     "Name": "ZINX",
-    "Host": "127.0.0.1",
+    "Host": "192.168.101.103",
     "Post": 8999,
     "MaxConnectionNumber": 3000,
     "WorkerPoolSize": 10,

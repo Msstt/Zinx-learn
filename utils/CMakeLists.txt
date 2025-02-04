@@ -6,8 +6,10 @@ list(APPEND INCLUDE ${CMAKE_SOURCE_DIR}/deps)
 
 add_executable(utils_test ${TEST} ${SRC})
 target_include_directories(utils_test PUBLIC ${INCLUDE})
+target_link_libraries(utils_test gtest glog)
 add_custom_target(utils_test_done COMMAND ./utils_test DEPENDS utils_test)
 
 add_library(utils SHARED ${SRC})
 target_include_directories(utils PUBLIC ${INCLUDE})
+target_link_libraries(utils gtest glog)
 add_dependencies(utils utils_test_done)

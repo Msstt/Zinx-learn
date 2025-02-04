@@ -1,18 +1,18 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}",
-                "${workspaceFolder}/tools/include"
+                "/opt/homebrew/Cellar/glog/0.6.0/include",
+                "/opt/homebrew/Cellar/gflags/2.2.2/include",
+                "/opt/homebrew/Cellar/boost/1.87.0/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-x64",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "intelliSenseMode": "macos-gcc-arm64"
         }
     ],
     "version": 4
