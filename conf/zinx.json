@@ -8,7 +8,7 @@
     "MaxDataBufferSize": 1024,
     "AOIMinX": -15,
     "AOIMaxX": 15,
-    "AOICountX": 1,
+    "AOICountX": 5,
     "AOIMinY": -40,
     "AOIMaxY": 40,
     "AOICountY": 2,

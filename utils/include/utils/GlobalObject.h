@@ -8,7 +8,9 @@ class GlobalObject {
  public:
   static auto Instance() -> GlobalObject &;
 
-  void LoadConfig(const std::string &conf_name = "zinx");
+  void LoadConfig(const std::string &conf_name);
+
+  void LoadTestConfig(const std::string &conf_name = "zinx");
 
  private:
   GlobalObject();

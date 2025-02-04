@@ -1,11 +1,31 @@
 # Zinx-learn
 
-依赖：
+## 依赖
+
 - gtest
 - glog
 - boost-asio
 - nlohmann-json
 - protobuf
+
+- 客户端模块：https://github.com/Msstt/ZINX-Client
+
+## 部署方式
+
+## 配置文件
+
+- `Name`：服务器名称
+- `Host`：监听的 `IP` 地址
+- `Post`：监听的端口号
+- `MaxConnectionNumber`：最大连接数
+- `WorkerPoolSize`：处理请求的线程数，`0` 表示为每个请求创建一个线程
+- `MaxWorkerTaskLength`：请求等待队列的最大长度
+- `MaxDataBufferSize`：请求内容的最大字节数
+- `AOIMinX`，`AOIMaxX`，`AOIMinY`，`AOIMaxY`：`AOI` 地图的边界
+- `AOICountX`，`AOICountY`：`AOI` 地图的划分块数
+- `BornMinX`，`BornMaxX`，`BornMinY`，`BornMaxY`：玩家出生位置的随机区域
+
+## 更新日志
 
 V0: 搭建 Zinx 框架
 V1: 实现 MMO 服务器
@@ -79,3 +99,8 @@ V1.8
 V1.8.1
 - 支持配置玩家出生位置
 - 修复位置信息同步广播对象不是相邻格子玩家的 bug
+
+V1.8.2
+- 支持命令行指定配置文件
+- 完善文档：部署方式
+- 上传 client

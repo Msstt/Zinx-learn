@@ -2,7 +2,7 @@
 #include "utils/GlobalObject.h"
 
 TEST(config, basic) {
-  GlobalObject::Instance().LoadConfig("test");
+  GlobalObject::Instance().LoadTestConfig("test");
 
   ASSERT_EQ(GlobalObject::Instance().name_, "TEST");
   ASSERT_EQ(GlobalObject::Instance().host_, "127.0.0.1");

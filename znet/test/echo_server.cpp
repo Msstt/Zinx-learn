@@ -31,7 +31,7 @@ void DoStop(IConnection& connection) {
 }
 
 int main(int argc, char* argv[]) {
-  GlobalObject::Instance().LoadConfig("test");
+  GlobalObject::Instance().LoadTestConfig("test");
   auto server = NewServer();
   server->AddRouter(0, std::make_shared<EchoRouter>());
   server->AddRouter(1, std::make_shared<UpperRouter>());

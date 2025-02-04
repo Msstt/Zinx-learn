@@ -7,8 +7,7 @@
 
 void GlobalObject::LoadConfig(const std::string& conf_name) {
   try {
-    std::ifstream config_file(PROJECT_PATH + std::string("/conf/") + conf_name +
-                              ".json");
+    std::ifstream config_file(conf_name);
     if (!config_file.is_open()) {
       LOG(FATAL) << "GlobalObject open \"./conf/zinx.json\" failed";
     }
@@ -38,7 +37,11 @@ void GlobalObject::LoadConfig(const std::string& conf_name) {
   }
 }
 
-GlobalObject::GlobalObject() { this->LoadConfig(); }
+void GlobalObject::LoadTestConfig(const std::string& conf_name) {
+  LoadConfig(PROJECT_PATH + std::string("/conf/") + conf_name + ".json");
+}
+
+GlobalObject::GlobalObject() { this->LoadTestConfig(); }
 
 auto GlobalObject::Instance() -> GlobalObject& {
   static GlobalObject instance;

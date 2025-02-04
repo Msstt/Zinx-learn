@@ -28,7 +28,10 @@ void OnConnectionDel(IConnection& connection) {
   LOG(INFO) << "=====> Player pidId = " << player->GetId() << " left ====";
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+  if (argc > 1) {
+    GlobalObject::Instance().LoadConfig(argv[1]);
+  }
   auto server = NewServer();
 
   server->SetOnConnectionStart(OnConnectionAdd);
